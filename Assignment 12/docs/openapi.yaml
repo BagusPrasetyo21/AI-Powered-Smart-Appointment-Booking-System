@@ -1,0 +1,807 @@
+openapi: 3.0.0
+info:
+  title: AI-Powered Smart Appointment Booking System API
+  description: |
+    REST API for managing patients, doctors, and appointments in an AI-Powered Smart Appointment Booking System.
+    
+    This API provides endpoints for creating, reading, updating, and deleting patients, doctors, and appointments.
+    It also includes specialized endpoints for business workflows such as appointment cancellation.
+    
+    The API enforces several business rules:
+    - Patients can't book more than 3 appointments in a single day
+    - Appointments must be booked at least 24 hours in advance
+    - Cancellations must be made at least 6 hours before the appointment
+    - Doctors cannot be double-booked for appointments
+  version: 1.0.0
+  contact:
+    name: Aphiwe Andrew Ncama
+    email: ncayiyane@gmail.com
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+tags:
+  - name: Patients
+    description: Operations related to patients
+  - name: Doctors
+    description: Operations related to doctors
+  - name: Appointments
+    description: Operations related to appointments
+paths:
+  /api/patients:
+    get:
+      summary: Get all patients
+      description: Retrieves a list of all patients registered in the system.
+      tags:
+        - Patients
+      responses:
+        '200':
+          description: List of patients successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientResponse'
+              example:
+                - id: "patient-123"
+                  name: "John Doe"
+                  contact_info:
+                    email: "john.doe@example.com"
+                    phone: "123-456-7890"
+                    address: "123 Main St, Anytown, USA"
+                - id: "patient-456"
+                  name: "Jane Smith"
+                  contact_info:
+                    email: "jane.smith@example.com"
+                    phone: "987-654-3210"
+                    address: "456 Oak St, Anytown, USA"
+    post:
+      summary: Create a new patient
+      description: Creates a new patient in the system. Each patient must have a unique email address.
+      tags:
+        - Patients
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientCreate'
+            example:
+              name: "John Doe"
+              contact_info:
+                email: "john.doe@example.com"
+                phone: "123-456-7890"
+                address: "123 Main St, Anytown, USA"
+      responses:
+        '201':
+          description: Patient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+              example:
+                id: "patient-123"
+                name: "John Doe"
+                contact_info:
+                  email: "john.doe@example.com"
+                  phone: "123-456-7890"
+                  address: "123 Main St, Anytown, USA"
+        '400':
+          description: Bad request - invalid input or duplicate email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Patient with email john.doe@example.com already exists"
+  
+  /api/patients/{patient_id}:
+    get:
+      summary: Get a patient by ID
+      tags:
+        - Patients
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Patient found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a patient
+      tags:
+        - Patients
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientUpdate'
+      responses:
+        '200':
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a patient
+      tags:
+        - Patients
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Patient deleted successfully
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /api/patients/search/{name}:
+    get:
+      summary: Search for patients by name
+      tags:
+        - Patients
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of patients matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientResponse'
+  
+  /api/doctors:
+    get:
+      summary: Get all doctors
+      tags:
+        - Doctors
+      responses:
+        '200':
+          description: List of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DoctorResponse'
+    post:
+      summary: Create a new doctor
+      tags:
+        - Doctors
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorCreate'
+      responses:
+        '201':
+          description: Doctor created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /api/doctors/{doctor_id}:
+    get:
+      summary: Get a doctor by ID
+      tags:
+        - Doctors
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Doctor found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorResponse'
+        '404':
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a doctor
+      tags:
+        - Doctors
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoctorUpdate'
+      responses:
+        '200':
+          description: Doctor updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a doctor
+      tags:
+        - Doctors
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Doctor deleted successfully
+        '404':
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /api/doctors/specialization/{specialization}:
+    get:
+      summary: Search for doctors by specialization
+      tags:
+        - Doctors
+      parameters:
+        - name: specialization
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of doctors matching the specialization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DoctorResponse'
+  
+  /api/doctors/search/{name}:
+    get:
+      summary: Search for doctors by name
+      tags:
+        - Doctors
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of doctors matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DoctorResponse'
+  
+  /api/appointments:
+    get:
+      summary: Get all appointments
+      description: Retrieves a list of all appointments in the system.
+      tags:
+        - Appointments
+      responses:
+        '200':
+          description: List of appointments successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
+              example:
+                - id: "appointment-123"
+                  patient_id: "patient-123"
+                  doctor_id: "doctor-123"
+                  date_time: "2025-05-10T14:30:00"
+                  duration: 30
+                  status: "SCHEDULED"
+                  type: "REGULAR"
+                  notes: "Regular check-up"
+                - id: "appointment-456"
+                  patient_id: "patient-456"
+                  doctor_id: "doctor-456"
+                  date_time: "2025-05-11T10:00:00"
+                  duration: 45
+                  status: "CONFIRMED"
+                  type: "FOLLOW_UP"
+                  notes: "Follow-up appointment"
+    post:
+      summary: Create a new appointment
+      description: |
+        Creates a new appointment in the system. The following business rules are enforced:
+        - Appointments must be booked at least 24 hours in advance
+        - A patient cannot book more than 3 appointments in a single day
+        - A doctor cannot be double-booked for appointments
+        - Both patient and doctor must exist in the system
+      tags:
+        - Appointments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentCreate'
+            example:
+              patient_id: "patient-123"
+              doctor_id: "doctor-123"
+              date_time: "2025-05-10T14:30:00"
+              duration: 30
+              type: "REGULAR"
+              notes: "Regular check-up"
+      responses:
+        '201':
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+              example:
+                id: "appointment-123"
+                patient_id: "patient-123"
+                doctor_id: "doctor-123"
+                date_time: "2025-05-10T14:30:00"
+                duration: 30
+                status: "SCHEDULED"
+                type: "REGULAR"
+                notes: "Regular check-up"
+        '400':
+          description: Bad request - invalid input or business rule violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                past_time:
+                  value:
+                    detail: "Appointment time cannot be in the past"
+                too_soon:
+                  value:
+                    detail: "Appointments must be booked at least 24 hours in advance"
+                doctor_booked:
+                  value:
+                    detail: "Doctor is already booked for this time slot"
+                daily_limit:
+                  value:
+                    detail: "Patient cannot book more than 3 appointments in a single day"
+        '404':
+          description: Patient or doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                patient_not_found:
+                  value:
+                    detail: "Patient with ID patient-123 not found"
+                doctor_not_found:
+                  value:
+                    detail: "Doctor with ID doctor-123 not found"
+  
+  /api/appointments/{appointment_id}:
+    get:
+      summary: Get an appointment by ID
+      tags:
+        - Appointments
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appointment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update an appointment
+      tags:
+        - Appointments
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentUpdate'
+      responses:
+        '200':
+          description: Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /api/appointments/{appointment_id}/cancel:
+    post:
+      summary: Cancel an appointment
+      description: |
+        Cancels an existing appointment. The following business rule is enforced:
+        - Cancellations must be made at least 6 hours before the appointment
+      tags:
+        - Appointments
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          description: The ID of the appointment to cancel
+          schema:
+            type: string
+          example: "appointment-123"
+      responses:
+        '200':
+          description: Appointment cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppointmentResponse'
+              example:
+                id: "appointment-123"
+                patient_id: "patient-123"
+                doctor_id: "doctor-123"
+                date_time: "2025-05-10T14:30:00"
+                duration: 30
+                status: "CANCELLED"
+                type: "REGULAR"
+                notes: "Regular check-up"
+        '400':
+          description: Bad request - too late to cancel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Cancellations must be made at least 6 hours before the appointment"
+        '404':
+          description: Appointment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Appointment with ID appointment-123 not found"
+  
+  /api/appointments/patient/{patient_id}:
+    get:
+      summary: Get all appointments for a patient
+      tags:
+        - Appointments
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of appointments for the patient
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Patient not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /api/appointments/doctor/{doctor_id}:
+    get:
+      summary: Get all appointments for a doctor
+      tags:
+        - Appointments
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of appointments for the doctor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppointmentResponse'
+        '404':
+          description: Doctor not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
+      required:
+        - detail
+    
+    ContactInfo:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        address:
+          type: string
+      required:
+        - email
+        - phone
+        - address
+    
+    PatientCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+      required:
+        - name
+        - contact_info
+    
+    PatientResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+      required:
+        - id
+        - name
+        - contact_info
+    
+    PatientUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+    
+    DoctorCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        specialization:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+      required:
+        - name
+        - specialization
+        - contact_info
+    
+    DoctorResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        specialization:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+      required:
+        - id
+        - name
+        - specialization
+        - contact_info
+    
+    DoctorUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        specialization:
+          type: string
+        contact_info:
+          $ref: '#/components/schemas/ContactInfo'
+    
+    AppointmentStatusEnum:
+      type: string
+      enum:
+        - SCHEDULED
+        - CONFIRMED
+        - COMPLETED
+        - CANCELLED
+        - MISSED
+    
+    AppointmentTypeEnum:
+      type: string
+      enum:
+        - REGULAR
+        - FOLLOW_UP
+        - EMERGENCY
+        - CONSULTATION
+    
+    AppointmentCreate:
+      type: object
+      properties:
+        patient_id:
+          type: string
+        doctor_id:
+          type: string
+        date_time:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          description: Duration in minutes
+          default: 30
+        type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+          default: REGULAR
+        notes:
+          type: string
+      required:
+        - patient_id
+        - doctor_id
+        - date_time
+    
+    AppointmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        patient_id:
+          type: string
+        doctor_id:
+          type: string
+        date_time:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          description: Duration in minutes
+        status:
+          $ref: '#/components/schemas/AppointmentStatusEnum'
+        type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        notes:
+          type: string
+      required:
+        - id
+        - patient_id
+        - doctor_id
+        - date_time
+        - duration
+        - status
+        - type
+    
+    AppointmentUpdate:
+      type: object
+      properties:
+        date_time:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          description: Duration in minutes
+        type:
+          $ref: '#/components/schemas/AppointmentTypeEnum'
+        notes:
+          type: string
